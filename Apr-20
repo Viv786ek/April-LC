@@ -1,0 +1,45 @@
+ unordered_map<Node *,Node *>parent;
+    unordered_set<Node*>vis;
+    Node* homeNode;
+    
+    void dfs(Node *root,int home, Node *&homeNode){
+        if(root==NULL){
+            return ;
+        }
+        
+        if(root->data==home){
+            homeNode=root;
+        }
+        
+        if(root->left){
+            parent[root->left]=root;
+            dfs(root->left,home,homeNode);
+        }
+        
+        if(root->right){
+            parent[root->right]=root;
+            dfs(root->right,home,homeNode);
+        }
+    }
+    
+    int find_sum_down(Node *root,int k){
+        if(root==NULL || k<0 || vis.find(root)!=vis.end()){
+            return 0;
+        }
+        vis.insert(root);
+        
+        int res=root->data+find_sum_down(parent[root],k-1)+find_sum_down(root->left,k-1)+find_sum_down(root->right,k-1);
+        return res;
+        
+    }
+    
+    
+    int ladoos(Node* root, int home, int k)
+    {
+        // Your code goes here
+        parent[root]=NULL;
+        homeNode=NULL;
+        dfs(root,home,homeNode);
+        return find_sum_down(homeNode,k);
+    }
+
